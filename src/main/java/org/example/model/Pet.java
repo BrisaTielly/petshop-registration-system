@@ -10,5 +10,5 @@ public class Pet {
      String species;
      String breed;
      int age;
-     Owner owner_id;
+     Owner owner;
 }
