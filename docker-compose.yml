@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mysql:9.1.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: anime_store #cria automaticamente esse banco
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - brisa_data:/var/lib/mysql
+
+volumes:
+  brisa_data:
