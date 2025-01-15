@@ -3,6 +3,7 @@ package org.example.services;
 import org.example.model.Owner;
 import org.example.repository.OwnerRepository;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class OwnerService {
@@ -41,16 +42,39 @@ public class OwnerService {
     }
 
     public static void deleteOwner() {
-        System.out.print("\nEnter id : ");
+        System.out.print("\nEnter owner id : ");
         int id = scanner.nextInt();
         validateId(id);
         OwnerRepository.deleteOwner(id);
     }
 
     public static void updateOwner() {
-        
-    }
+        System.out.print("\nEnter owner id : ");
+        Optional<Owner> owner = OwnerRepository.findById(scanner.nextInt());
+        if (owner.isEmpty()) { //Se for vazio
+            System.out.println("Not found");
+            return;
+        }
+        //encontrou alguem pelo id e ja colocou em um objeto owner
+        Owner ownerdb = owner.get(); //Pega o objeto de dentro o Optional
+        System.out.println("Owner found: " + ownerdb);
+        System.out.printf("Enter owner name if you want to update, or enter if you dont: ");
+        String name = scanner.nextLine();
+        name = (name.isEmpty()) ? ownerdb.getName() : name;
+        System.out.printf("\nEnter owner phone if you want to update, or enter if you dont: ");
+        String phone = scanner.nextLine();
+        phone = (phone.isEmpty()) ? ownerdb.getPhone() : phone;
+        System.out.printf("\nEnter owner email if you want to update, or enter if you dont: ");
+        String email = scanner.nextLine();
+        email = (email.isEmpty()) ? ownerdb.getEmail() : email;
 
+        Owner ownerModified = Owner.builder()
+                .name(name)
+                .phone(phone)
+                .email(email)
+                .build();
+        OwnerRepository.updateOwner(ownerModified);
+    }
 
 
 
