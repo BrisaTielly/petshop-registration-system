@@ -5,6 +5,7 @@ import org.example.util.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OwnerRepository {
@@ -31,7 +32,6 @@ public class OwnerRepository {
     }
 
     public static void deleteOwner(int id) {
-        String query = "DELETE FROM owner WHERE id = ?";
         try(Connection conn = ConnectionFactory.getConnection();
             PreparedStatement ptsm = createOwnerPreparedStatementDeleteOwner(conn, id)) {
             ptsm.executeUpdate();
@@ -46,6 +46,43 @@ public class OwnerRepository {
         PreparedStatement pstm = conn.prepareStatement(query);
         pstm.setInt(1, id);
         return pstm;
+    }
+
+    public static void updateOwner(Owner owner) {
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ptsm = createOwnerPreparedStatementUpdateOwner(conn, owner)) {
+            ptsm.executeUpdate();
+            System.out.printf("Owner updated successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while updating Owner");
+        }
+    }
+
+    public static PreparedStatement createOwnerPreparedStatementUpdateOwner(Connection conn, Owner owner) throws SQLException {
+        String query = "UPDATE owner SET name = ?, phone = ?, email = ? WHERE id = ?";
+        PreparedStatement pstm = conn.prepareStatement(query);
+        pstm.setString(1, owner.getName());
+        pstm.setString(2, owner.getPhone());
+        pstm.setString(3, owner.getEmail());
+        pstm.setInt(4, owner.getId());
+        return pstm;
+    }
+
+    public static Owner findById(int id) {
+        String query = "SELECT * FROM owner WHERE id = ?";
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ptsm = conn.prepareStatement(query);
+            ResultSet rs = ptsm.executeQuery()) {
+            while (rs.next()) {
+                if(id == rs.getInt("id")) break;
+            }
+
+
+
+            System.out.printf("Owner found successfully");
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while finding Owner");
+        }
     }
 
 

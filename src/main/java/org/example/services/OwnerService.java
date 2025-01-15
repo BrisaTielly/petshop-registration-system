@@ -10,11 +10,17 @@ public class OwnerService {
 
     public static void menu(int option) {
         switch (option) {
-            case 1: registerOwner();
-            break;
-            case 2: deleteOwner();
-            break;
-            default: System.out.println("Invalid option");
+            case 1:
+                registerOwner();
+                break;
+            case 2:
+                deleteOwner();
+                break;
+            case 3:
+
+
+            default:
+                System.out.println("Invalid option");
         }
     }
 
@@ -41,6 +47,9 @@ public class OwnerService {
         OwnerRepository.deleteOwner(id);
     }
 
+    public static void updateOwner() {
+        
+    }
 
 
 
