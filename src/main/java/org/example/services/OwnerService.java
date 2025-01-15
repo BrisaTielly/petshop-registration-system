@@ -12,13 +12,14 @@ public class OwnerService {
         switch (option) {
             case 1: registerOwner();
             break;
-            case 2:
+            case 2: deleteOwner();
+            break;
             default: System.out.println("Invalid option");
         }
     }
 
     public static void registerOwner() {
-        System.out.print("\nEnter owner name: ");
+        System.out.print("Enter owner name: ");
         String name = scanner.nextLine();
         System.out.print("\nEnter owner email: ");
         String email = scanner.nextLine();
@@ -32,6 +33,17 @@ public class OwnerService {
                 .build();
         register(owner);
     }
+
+    public static void deleteOwner() {
+        System.out.print("\nEnter id : ");
+        int id = scanner.nextInt();
+        validateId(id);
+        OwnerRepository.deleteOwner(id);
+    }
+
+
+
+
 
     public static void register(Owner owner) {
         validateOwner(owner);
@@ -50,6 +62,12 @@ public class OwnerService {
     public static void validateEmail(String email) {
         if( email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address");
+        }
+    }
+
+    public static void validateId(int id) {
+        if(id < 0) {
+            throw new IllegalArgumentException("Invalid id");
         }
     }
 

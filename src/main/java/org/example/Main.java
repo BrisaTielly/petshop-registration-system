@@ -7,8 +7,13 @@ import org.example.services.OwnerService;
 import org.example.services.PetService;
 import org.example.util.ConnectionFactory;
 
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
-        OwnerService.menu(1);
+        Scanner scanner = new Scanner(System.in);
+        System.out.printf("Digite a opção\n");
+        int opt = scanner.nextInt();
+        OwnerService.menu(opt);
     }
 }
