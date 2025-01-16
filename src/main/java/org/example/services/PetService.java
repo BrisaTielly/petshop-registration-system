@@ -14,14 +14,20 @@ public class PetService {
 
     public static void menu(int option) {
         switch (option) {
-            case 1:registerPet();
+            case 1:
+                registerPet();
                 break;
 
-                default: throw new IllegalArgumentException("Invalid option");
+            case 2:
+                deletePet();
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid option");
         }
     }
 
-    public static void registerPet(){
+    public static void registerPet() {
         System.out.println("Enter the name of the pet");
         String name = scanner.nextLine();
         System.out.println("Enter the species of the pet");
@@ -32,8 +38,8 @@ public class PetService {
         String breed = scanner.nextLine();
         System.out.println("Enter the ID of the pet's owner");
         int owner_id = Integer.parseInt(scanner.nextLine());
-       //retorna um optional
-        Optional<Owner> owner= OwnerRepository.findById(owner_id);
+        //retorna um optional
+        Optional<Owner> owner = OwnerRepository.findById(owner_id);
         if (owner.isEmpty()) {
             System.out.println("[ERROR] Owner not found!");
             return;
@@ -48,6 +54,17 @@ public class PetService {
                 .build();
 
         registerPet(pet);
+    }
+
+    public static void deletePet() {
+        System.out.println("\n==============================");
+        System.out.println("  Delete Pet");
+        System.out.println("==============================");
+        System.out.print("Enter pet id: ");
+        int id = Integer.parseInt(scanner.nextLine());
+        OwnerService.validateId(id);
+        PetRepository.deletePet(id);
+        System.out.println("\n[INFO] Pet deleted successfully!");
     }
 
     public static void registerPet(Pet pet) {

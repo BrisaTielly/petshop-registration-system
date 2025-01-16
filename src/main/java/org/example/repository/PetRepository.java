@@ -29,4 +29,22 @@ public class PetRepository {
         pstm.setInt(5, pet.getOwner().getId());
         return pstm;
     }
+
+    public static void deletePet(int id) {
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ptsm = createOwnerPreparedStatementDeletePet(conn, id)) {
+            ptsm.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while deleting Pet: " + e.getMessage());
+        }
+
+    }
+
+    public static PreparedStatement createOwnerPreparedStatementDeletePet(Connection conn, int id) throws SQLException {
+        String query = "DELETE FROM pet WHERE pet_id = ?";
+        PreparedStatement pstm = conn.prepareStatement(query);
+        pstm.setInt(1, id);
+        return pstm;
+    }
+
 }
