@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.printf("Digite a opção\n");
-        int opt = scanner.nextInt();
-        OwnerService.menu(opt);
+//        System.out.printf("Digite a opção\n");
+//        int opt = scanner.nextInt();
+        OwnerService.menu(4);
     }
 }

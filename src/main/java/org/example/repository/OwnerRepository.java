@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class OwnerRepository {
@@ -52,26 +54,26 @@ public class OwnerRepository {
     public static void updateOwner(Owner owner) {
         try(Connection conn = ConnectionFactory.getConnection();
             PreparedStatement ptsm = createOwnerPreparedStatementUpdateOwner(conn, owner)) {
-            ptsm.executeUpdate();
+             ptsm.executeUpdate();
             System.out.printf("Owner updated successfully");
         } catch (SQLException e) {
-            throw new RuntimeException("Error while updating Owner");
+            throw new RuntimeException("Error while updating Owner" + e.getMessage());
         }
     }
 
     public static PreparedStatement createOwnerPreparedStatementUpdateOwner(Connection conn, Owner owner) throws SQLException {
-        String query = "UPDATE owner SET name = ?, phone = ?, email = ? WHERE id = ?";
+        String query = "UPDATE owner SET name = ?, email = ?, phone = ? WHERE (id = ?)";
         PreparedStatement pstm = conn.prepareStatement(query);
         pstm.setString(1, owner.getName());
-        pstm.setString(2, owner.getPhone());
         pstm.setString(3, owner.getEmail());
+        pstm.setString(2, owner.getPhone());
         pstm.setInt(4, owner.getId());
         return pstm;
     }
 
     //Retornando um optional porque vamos fazer uma busca que não sabemos se vai ou não retornar algo
     public static Optional<Owner> findById(int id) {
-        String query = "SELECT * FROM owner WHERE id = ?";
+        String query = "SELECT id, name, email, phone FROM owner WHERE id = ?";
         try(Connection conn = ConnectionFactory.getConnection();
             PreparedStatement ptsm = createOwnerPreparedStatementFindById(conn, id);
             ResultSet rs = ptsm.executeQuery()) {
@@ -80,8 +82,8 @@ public class OwnerRepository {
                         Owner.builder()
                                 .id(rs.getInt("id"))
                                 .name(rs.getString("name"))
-                                .phone(rs.getString("phone"))
                                 .email(rs.getString("email"))
+                                .phone(rs.getString("phone"))
                                 .build()
                 );
         } catch (SQLException e) {
@@ -96,5 +98,32 @@ public class OwnerRepository {
         return pstm;
     }
 
+    public static List<Owner> findOwnerByName(String name){
+        List<Owner> owners = new ArrayList<>();
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ptsm = createOwnerPreparedStatementFindByName(conn, name);
+            ResultSet rs = ptsm.executeQuery()) {
+            while(rs.next()){
+                    Owner owner = Owner.builder()
+                            .id(rs.getInt("id"))
+                            .name(rs.getString("name"))
+                            .email(rs.getString("email"))
+                            .phone(rs.getString("phone"))
+                            .build();
+                    owners.add(owner);
+                    //System.out.printf("Owner found successfully");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while founding Owner " + e.getMessage());
+        }
+        return owners;
+    }
+
+    public static PreparedStatement createOwnerPreparedStatementFindByName(Connection conn, String name) throws SQLException {
+        String query = "SELECT id, name, email, phone FROM owner WHERE name like ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, "%" + name + "%");
+        return ps;
+    }
 
 }
