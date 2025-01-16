@@ -30,7 +30,7 @@ Este é um projeto de um sistema CRUD (Create, Read, Update, Delete) para gerenc
 
 1. **Clone o repositório**:
    ```bash
-   git clone https://github.com/seu-usuario/nome-do-repositorio.git
+   git clone https://github.com/BrisaTielly/petshop-registration-system.git
    ```
 
 2. **Configure o banco de dados**:
