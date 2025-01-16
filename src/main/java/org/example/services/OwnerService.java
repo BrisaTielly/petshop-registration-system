@@ -5,7 +5,6 @@ import org.example.repository.OwnerRepository;
 
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class OwnerService {
     private static final Scanner scanner = new Scanner(System.in);
@@ -24,22 +23,23 @@ public class OwnerService {
             case 4:
                 findOwnerByName();
                 break;
-
-
             default:
-                System.out.println("Invalid option");
+                System.out.println("\n[ERROR] Invalid option! Please select a valid option.");
         }
     }
 
     public static void registerOwner() {
+        System.out.println("\n==============================");
+        System.out.println("  Register Owner");
+        System.out.println("==============================");
         System.out.print("Enter owner name: ");
         String name = scanner.nextLine();
-        System.out.print("\nEnter owner email: ");
+        System.out.print("Enter owner email: ");
         String email = scanner.nextLine();
-        System.out.print("\nEnter owner phone: ");
+        System.out.print("Enter owner phone: ");
         String phone = scanner.nextLine();
-        Owner owner = Owner
-                .builder()
+
+        Owner owner = Owner.builder()
                 .name(name)
                 .phone(phone)
                 .email(email)
@@ -48,31 +48,41 @@ public class OwnerService {
     }
 
     public static void deleteOwner() {
-        System.out.print("\nEnter owner id : ");
+        System.out.println("\n==============================");
+        System.out.println("  Delete Owner");
+        System.out.println("==============================");
+        System.out.print("Enter owner id: ");
         int id = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline
         validateId(id);
         OwnerRepository.deleteOwner(id);
+        System.out.println("\n[INFO] Owner deleted successfully!");
     }
 
     public static void updateOwner() {
-        System.out.print("\nEnter owner id : ");
+        System.out.println("\n==============================");
+        System.out.println("  Update Owner");
+        System.out.println("==============================");
+        System.out.print("Enter owner id: ");
         Optional<Owner> owner = OwnerRepository.findById(Integer.parseInt(scanner.nextLine()));
-        if (owner.isEmpty()) { //Se for vazio
-            System.out.println("Not found");
+        if (owner.isEmpty()) {
+            System.out.println("[ERROR] Owner not found!");
             return;
         }
-        //encontrou alguem pelo id e ja colocou em um objeto owner
-        Owner ownerdb = owner.get(); //Pega o objeto de dentro o Optional
+        Owner ownerdb = owner.get();
         System.out.println("Owner found: " + ownerdb);
-        System.out.printf("Enter owner name if you want to update, or enter if you dont: ");
+
+        System.out.print("Enter owner name (leave empty to keep current): ");
         String name = scanner.nextLine();
-        name = (name.isEmpty()) ? ownerdb.getName() : name;
-        System.out.printf("\nEnter owner email if you want to update, or enter if you dont: ");
+        name = name.isEmpty() ? ownerdb.getName() : name;
+
+        System.out.print("Enter owner email (leave empty to keep current): ");
         String email = scanner.nextLine();
-        email = (email.isEmpty()) ? ownerdb.getEmail() : email;
-        System.out.printf("\nEnter owner phone if you want to update, or enter if you dont: ");
+        email = email.isEmpty() ? ownerdb.getEmail() : email;
+
+        System.out.print("Enter owner phone (leave empty to keep current): ");
         String phone = scanner.nextLine();
-        phone = (phone.isEmpty()) ? ownerdb.getPhone() : phone;
+        phone = phone.isEmpty() ? ownerdb.getPhone() : phone;
 
         Owner ownerModified = Owner.builder()
                 .id(ownerdb.getId())
@@ -81,17 +91,23 @@ public class OwnerService {
                 .phone(phone.trim())
                 .build();
         OwnerRepository.updateOwner(ownerModified);
+        System.out.println("\n[INFO] Owner updated successfully!");
     }
 
     public static void findOwnerByName() {
-        System.out.printf("\nEnter owner name : ");
+        System.out.println("\n==============================");
+        System.out.println("  Find Owner By Name");
+        System.out.println("==============================");
+        System.out.print("Enter owner name: ");
         String name = scanner.nextLine();
+        System.out.println("\n[INFO] Owners found: ");
         OwnerRepository.findOwnerByName(name).forEach(System.out::println);
     }
 
     public static void register(Owner owner) {
         validateOwner(owner);
         OwnerRepository.registerOwner(owner);
+        System.out.println("\n[INFO] Owner registered successfully!");
     }
 
     public static void validateOwner(Owner owner) {
@@ -100,7 +116,9 @@ public class OwnerService {
     }
 
     public static void validateName(String name) {
-        PetService.validateName(name);
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Owner name cannot be empty!");
+        }
     }
 
     public static void validateEmail(String email) {
@@ -110,9 +128,8 @@ public class OwnerService {
     }
 
     public static void validateId(int id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("Invalid id");
+        if (id <= 0) {
+            throw new IllegalArgumentException("Invalid id. Must be a positive number.");
         }
     }
-
 }

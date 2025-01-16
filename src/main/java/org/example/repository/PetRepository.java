@@ -25,7 +25,8 @@ public class PetRepository {
         pstm.setString(1, pet.getName());
         pstm.setString(2, pet.getSpecies());
         pstm.setString(3, pet.getBreed());
-        pstm.setInt(4, pet.getOwner().getId());
+        pstm.setInt(4, pet.getAge());
+        pstm.setInt(5, pet.getOwner().getId());
         return pstm;
     }
 }

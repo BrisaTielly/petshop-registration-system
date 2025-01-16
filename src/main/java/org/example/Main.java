@@ -12,8 +12,9 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-//        System.out.printf("Digite a opção\n");
+//        System.out.printf("Digite a opção: ");
 //        int opt = scanner.nextInt();
-        OwnerService.menu(4);
+//        OwnerService.menu(opt);
+        PetService.menu(1);
     }
 }
