@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PetRepository {
@@ -108,6 +110,47 @@ public class PetRepository {
         PreparedStatement pstm = conn.prepareStatement(query);
         pstm.setInt(1, id);
         return pstm;
+    }
+
+    public static List<Pet> findPetByName(String name){
+        List<Pet> pets = new ArrayList<>();
+        try(Connection conn = ConnectionFactory.getConnection();
+            PreparedStatement ptsm = createPetPreparedStatementFindByName(conn, name);
+            ResultSet rs = ptsm.executeQuery()) {
+            while(rs.next()){
+                Owner owner = Owner.builder()
+                        .id(rs.getInt("ow_id"))
+                        .name(rs.getString("owner_name"))
+                        .email(rs.getString("email"))
+                        .phone(rs.getString("phone"))
+                        .build();
+
+                Pet pet = Pet.builder()
+                        .id(rs.getInt("pet_id"))
+                        .name(rs.getString("name"))
+                        .species(rs.getString("species"))
+                        .breed(rs.getString("breed"))
+                        .age(rs.getInt("age"))
+                        .owner(owner)
+                        .build();
+                pets.add(pet);
+                //System.out.printf("Pet found successfully");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error while founding Pet " + e.getMessage());
+        }
+        return pets;
+    }
+
+    public static PreparedStatement createPetPreparedStatementFindByName(Connection conn, String name) throws SQLException {
+        String query = "SELECT p.pet_id, p.name, p.species, p.breed, p.age, o.id AS ow_id, o.name AS owner_name, o.email, o.phone " +
+                "FROM pet p " +
+                "INNER JOIN owner o " +
+                "ON p.owner_id = o.id " +
+                "WHERE p.name like ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, "%" + name + "%");
+        return ps;
     }
 
 }

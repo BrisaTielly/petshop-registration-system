@@ -24,6 +24,9 @@ public class PetService {
             case 3:
                 updatePet();
                 break;
+            case 4:
+                findPetByName();
+                break;
             default:
                 throw new IllegalArgumentException("Invalid option");
         }
@@ -110,6 +113,15 @@ public class PetService {
         System.out.println("\n[INFO] Pet updated successfully!");
     }
 
+    public static void findPetByName() {
+        System.out.println("\n==============================");
+        System.out.println("  Find Pet By Name");
+        System.out.println("==============================");
+        System.out.print("Enter Pet name: ");
+        String name = scanner.nextLine();
+        System.out.println("\n[INFO] Pet found: ");
+        PetRepository.findPetByName(name).forEach(System.out::println);
+    }
 
 
 
