@@ -26,30 +26,31 @@ public class PetService {
                 findPetByName();
                 break;
             default:
-                throw new IllegalArgumentException("Invalid option");
+                throw new IllegalArgumentException("[ERROR] Invalid option");
         }
     }
 
     public static void registerPet() {
-        System.out.println("Enter the name of the pet");
+        System.out.println("\n==============================");
+        System.out.println("  Register Pet");
+        System.out.println("==============================");
+        System.out.print("Enter the name of the pet: ");
         String name = scanner.nextLine();
-        System.out.println("Enter the species of the pet");
+        System.out.print("Enter the species of the pet: ");
         String species = scanner.nextLine();
-
-        System.out.println("Enter the age of the pet");
-        int age = readInt("Please enter a valid age: ");
-
-        System.out.println("Enter the breed of the pet");
+        System.out.print("Enter the age of the pet: ");
+        int age = readInt("[ERROR] Please enter a valid age: ");
+        System.out.print("Enter the breed of the pet: ");
         String breed = scanner.nextLine();
-
-        System.out.println("Enter the ID of the pet's owner");
-        int owner_id = readInt("Please enter a valid owner ID: ");
+        System.out.print("Enter the ID of the pet's owner: ");
+        int owner_id = readInt("[ERROR] Please enter a valid owner ID: ");
 
         Optional<Owner> owner = OwnerRepository.findById(owner_id);
         if (owner.isEmpty()) {
             System.out.println("[ERROR] Owner not found!");
             return;
         }
+
         Owner ownerDB = owner.get();
         Pet pet = Pet.builder()
                 .name(name)
@@ -59,14 +60,15 @@ public class PetService {
                 .owner(ownerDB)
                 .build();
         registerPet(pet);
+        System.out.println("\n[INFO] Pet registered successfully!");
     }
 
     public static void deletePet() {
         System.out.println("\n==============================");
         System.out.println("  Delete Pet");
         System.out.println("==============================");
-        System.out.print("Enter pet id: ");
-        int id = readInt("Please enter a valid pet ID: ");
+        System.out.print("Enter the pet ID: ");
+        int id = readInt("[ERROR] Please enter a valid pet ID: ");
         OwnerService.validateId(id);
         PetRepository.deletePet(id);
         System.out.println("\n[INFO] Pet deleted successfully!");
@@ -76,14 +78,15 @@ public class PetService {
         System.out.println("\n==============================");
         System.out.println("  Update Pet");
         System.out.println("==============================");
-        System.out.print("Enter pet id: ");
-        Optional<Pet> pet = PetRepository.findById(readInt("Please enter a valid pet ID: "));
+        System.out.print("Enter the pet ID: ");
+        Optional<Pet> pet = PetRepository.findById(readInt("[ERROR] Please enter a valid pet ID: "));
         if (pet.isEmpty()) {
             System.out.println("[ERROR] Pet not found!");
             return;
         }
+
         Pet petDB = pet.get();
-        System.out.println("Pet found: " + petDB);
+        System.out.println("\n[INFO] Pet found: " + petDB);
 
         System.out.print("Enter pet name (leave empty to keep current): ");
         String name = scanner.nextLine();
@@ -99,7 +102,7 @@ public class PetService {
 
         System.out.print("Enter pet age (leave empty to keep current): ");
         String ageInput = scanner.nextLine();
-        int age = ageInput.isEmpty() ? petDB.getAge() : readInt("Please enter a valid age: ");
+        int age = ageInput.isEmpty() ? petDB.getAge() : readInt("[ERROR] Please enter a valid age: ");
 
         Pet petMod = Pet.builder()
                 .id(petDB.getId())
@@ -108,6 +111,7 @@ public class PetService {
                 .breed(breed)
                 .age(age)
                 .build();
+
         PetRepository.updatePet(petMod);
         System.out.println("\n[INFO] Pet updated successfully!");
     }
@@ -116,9 +120,9 @@ public class PetService {
         System.out.println("\n==============================");
         System.out.println("  Find Pet By Name");
         System.out.println("==============================");
-        System.out.print("Enter Pet name: ");
+        System.out.print("Enter the pet name: ");
         String name = scanner.nextLine();
-        System.out.println("\n[INFO] Pet found: ");
+        System.out.println("\n[INFO] Pets found: ");
         PetRepository.findPetByName(name).forEach(System.out::println);
     }
 
@@ -127,30 +131,30 @@ public class PetService {
         PetRepository.registerPet(pet);
     }
 
-    public static void validatePet(String petName, String especies, int age) {
+    public static void validatePet(String petName, String species, int age) {
         validateName(petName);
-        validateSpecies(especies);
+        validateSpecies(species);
         validateAge(age);
     }
 
     public static void validateName(String name) {
         if (name == null || name.length() < 2 || name.length() > 50) {
-            throw new IllegalArgumentException("Name must be between 2 and 50 characters");
+            throw new IllegalArgumentException("[ERROR] Name must be between 2 and 50 characters");
         }
         if (!name.matches("[A-Za-z\\s]+")) {
-            throw new IllegalArgumentException("Name can only contain letters and spaces");
+            throw new IllegalArgumentException("[ERROR] Name can only contain letters and spaces");
         }
     }
 
     public static void validateSpecies(String species) {
         if (species == null || species.isEmpty()) {
-            throw new IllegalArgumentException("Species cannot be null or empty");
+            throw new IllegalArgumentException("[ERROR] Species cannot be null or empty");
         }
     }
 
     public static void validateAge(int age) {
         if (age < 0) {
-            throw new IllegalArgumentException("Age cannot be negative");
+            throw new IllegalArgumentException("[ERROR] Age cannot be negative");
         }
     }
 
