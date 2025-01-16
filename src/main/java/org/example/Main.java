@@ -15,6 +15,6 @@ public class Main {
 //        System.out.printf("Digite a opção: ");
       //  int opt = scanner.nextInt();
 //        OwnerService.menu(opt);
-        PetService.menu(4);
+        PetService.menu(1);
     }
 }

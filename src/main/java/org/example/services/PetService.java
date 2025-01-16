@@ -4,7 +4,6 @@ import org.example.model.Owner;
 import org.example.model.Pet;
 import org.example.repository.OwnerRepository;
 import org.example.repository.PetRepository;
-import org.example.util.ValidationUtils;
 
 import java.util.Optional;
 import java.util.Scanner;
@@ -17,7 +16,6 @@ public class PetService {
             case 1:
                 registerPet();
                 break;
-
             case 2:
                 deletePet();
                 break;
@@ -37,13 +35,16 @@ public class PetService {
         String name = scanner.nextLine();
         System.out.println("Enter the species of the pet");
         String species = scanner.nextLine();
+
         System.out.println("Enter the age of the pet");
-        int age = Integer.parseInt(scanner.nextLine());
+        int age = readInt("Please enter a valid age: ");
+
         System.out.println("Enter the breed of the pet");
         String breed = scanner.nextLine();
+
         System.out.println("Enter the ID of the pet's owner");
-        int owner_id = Integer.parseInt(scanner.nextLine());
-        //retorna um optional
+        int owner_id = readInt("Please enter a valid owner ID: ");
+
         Optional<Owner> owner = OwnerRepository.findById(owner_id);
         if (owner.isEmpty()) {
             System.out.println("[ERROR] Owner not found!");
@@ -57,7 +58,6 @@ public class PetService {
                 .breed(breed)
                 .owner(ownerDB)
                 .build();
-
         registerPet(pet);
     }
 
@@ -66,19 +66,18 @@ public class PetService {
         System.out.println("  Delete Pet");
         System.out.println("==============================");
         System.out.print("Enter pet id: ");
-        int id = Integer.parseInt(scanner.nextLine());
+        int id = readInt("Please enter a valid pet ID: ");
         OwnerService.validateId(id);
         PetRepository.deletePet(id);
         System.out.println("\n[INFO] Pet deleted successfully!");
     }
-
 
     public static void updatePet() {
         System.out.println("\n==============================");
         System.out.println("  Update Pet");
         System.out.println("==============================");
         System.out.print("Enter pet id: ");
-        Optional<Pet> pet = PetRepository.findById(Integer.parseInt(scanner.nextLine()));
+        Optional<Pet> pet = PetRepository.findById(readInt("Please enter a valid pet ID: "));
         if (pet.isEmpty()) {
             System.out.println("[ERROR] Pet not found!");
             return;
@@ -99,15 +98,15 @@ public class PetService {
         breed = breed.isEmpty() ? petDB.getBreed() : breed;
 
         System.out.print("Enter pet age (leave empty to keep current): ");
-        String age = scanner.nextLine();
-        age = age.isEmpty() ? String.valueOf(petDB.getAge()) : age;
+        String ageInput = scanner.nextLine();
+        int age = ageInput.isEmpty() ? petDB.getAge() : readInt("Please enter a valid age: ");
 
         Pet petMod = Pet.builder()
                 .id(petDB.getId())
                 .name(name)
                 .species(species)
                 .breed(breed)
-                .age(Integer.parseInt(age))
+                .age(age)
                 .build();
         PetRepository.updatePet(petMod);
         System.out.println("\n[INFO] Pet updated successfully!");
@@ -122,8 +121,6 @@ public class PetService {
         System.out.println("\n[INFO] Pet found: ");
         PetRepository.findPetByName(name).forEach(System.out::println);
     }
-
-
 
     public static void registerPet(Pet pet) {
         validatePet(pet.getName(), pet.getSpecies(), pet.getAge());
@@ -145,7 +142,6 @@ public class PetService {
         }
     }
 
-
     public static void validateSpecies(String species) {
         if (species == null || species.isEmpty()) {
             throw new IllegalArgumentException("Species cannot be null or empty");
@@ -158,5 +154,13 @@ public class PetService {
         }
     }
 
-
+    private static int readInt(String errorMessage) {
+        while (true) {
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println(errorMessage);
+            }
+        }
+    }
 }
