@@ -21,7 +21,9 @@ public class PetService {
             case 2:
                 deletePet();
                 break;
-
+            case 3:
+                updatePet();
+                break;
             default:
                 throw new IllegalArgumentException("Invalid option");
         }
@@ -66,6 +68,50 @@ public class PetService {
         PetRepository.deletePet(id);
         System.out.println("\n[INFO] Pet deleted successfully!");
     }
+
+
+    public static void updatePet() {
+        System.out.println("\n==============================");
+        System.out.println("  Update Pet");
+        System.out.println("==============================");
+        System.out.print("Enter pet id: ");
+        Optional<Pet> pet = PetRepository.findById(Integer.parseInt(scanner.nextLine()));
+        if (pet.isEmpty()) {
+            System.out.println("[ERROR] Pet not found!");
+            return;
+        }
+        Pet petDB = pet.get();
+        System.out.println("Pet found: " + petDB);
+
+        System.out.print("Enter pet name (leave empty to keep current): ");
+        String name = scanner.nextLine();
+        name = name.isEmpty() ? petDB.getName() : name;
+
+        System.out.print("Enter pet species (leave empty to keep current): ");
+        String species = scanner.nextLine();
+        species = species.isEmpty() ? petDB.getSpecies() : species;
+
+        System.out.print("Enter pet breed (leave empty to keep current): ");
+        String breed = scanner.nextLine();
+        breed = breed.isEmpty() ? petDB.getBreed() : breed;
+
+        System.out.print("Enter pet age (leave empty to keep current): ");
+        String age = scanner.nextLine();
+        age = age.isEmpty() ? String.valueOf(petDB.getAge()) : age;
+
+        Pet petMod = Pet.builder()
+                .id(petDB.getId())
+                .name(name)
+                .species(species)
+                .breed(breed)
+                .age(Integer.parseInt(age))
+                .build();
+        PetRepository.updatePet(petMod);
+        System.out.println("\n[INFO] Pet updated successfully!");
+    }
+
+
+
 
     public static void registerPet(Pet pet) {
         validatePet(pet.getName(), pet.getSpecies(), pet.getAge());

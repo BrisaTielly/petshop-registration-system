@@ -13,8 +13,8 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 //        System.out.printf("Digite a opção: ");
-//        int opt = scanner.nextInt();
+      //  int opt = scanner.nextInt();
 //        OwnerService.menu(opt);
-        PetService.menu(2);
+        PetService.menu(3);
     }
 }
