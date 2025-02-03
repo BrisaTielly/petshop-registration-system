@@ -39,9 +39,10 @@ public class OwnerController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<OwnerDTO> save(@RequestBody OwnerDTO ownerDTO){
+    public ResponseEntity<String> save(@RequestBody OwnerDTO ownerDTO){
         OwnerDTO owner = ownerService.save(ownerDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(owner);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Novo dono cadastrado com sucesso: " + owner.getName() + " (ID): " + owner.getId());
     }
 
     @PutMapping("/update/{id}")

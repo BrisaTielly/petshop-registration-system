@@ -40,8 +40,9 @@ public class PetController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<PetDTO> save(@RequestBody PetDTO petDTO){
+    public ResponseEntity<String> save(@RequestBody PetDTO petDTO){
         PetDTO pet = petService.save(petDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(pet);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Novo pet criado com sucesso: " + pet.getName() + " (ID): " + pet.getId());
     }
 }
