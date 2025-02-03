@@ -45,4 +45,14 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Novo pet criado com sucesso: " + pet.getName() + " (ID): " + pet.getId());
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody PetDTO petDTO){
+        PetDTO pet = petService.update(id, petDTO);
+        if(pet != null) {
+            return ResponseEntity.ok("Pet com o id: " + id + " atualizado com sucesso!!!");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Pet com o id: " + id + " nao encontrado em nossos registros");
+    }
 }

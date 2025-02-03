@@ -1,9 +1,7 @@
 package org.example.services;
 
-import org.example.dto.OwnerDTO;
 import org.example.dto.PetDTO;
 import org.example.mapper.PetMapper;
-import org.example.model.OwnerModel;
 import org.example.model.PetModel;
 import org.example.repository.PetRepository;
 import org.springframework.stereotype.Service;
@@ -38,5 +36,16 @@ public class PetService {
     public PetDTO save(PetDTO pet){
         PetModel petModel = petRepository.save(petMapper.mapToModel(pet));
         return petMapper.mapToDTO(petModel);
+    }
+
+    public PetDTO update(Long id, PetDTO petDTO) {
+        Optional<PetModel> petModel = petRepository.findById(id);
+        if(petModel.isPresent()){
+            PetModel pet = petMapper.mapToModel(petDTO);
+            pet.setId(id);
+            pet = petRepository.save(pet);
+            return petMapper.mapToDTO(pet);
+        }
+        return null;
     }
 }
