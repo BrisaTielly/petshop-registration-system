@@ -34,4 +34,9 @@ public class PetService {
         Optional<PetModel> pet = petRepository.findById(id);
         return pet.map(petMapper::mapToDTO).orElse(null);
     }
+
+    public PetDTO save(PetDTO pet){
+        PetModel petModel = petRepository.save(petMapper.mapToModel(pet));
+        return petMapper.mapToDTO(petModel);
+    }
 }

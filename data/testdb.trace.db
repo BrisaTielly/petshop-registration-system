@@ -185,3 +185,5 @@ Caused by: org.h2.mvstore.MVStoreException: The file is locked: /home/brisasilva
 org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]
 2025-02-03 13:10:12.419751-03:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]
+2025-02-03 15:00:17.381001-03:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLNonTransientException: The object is already closed [90007-224]
