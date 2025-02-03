@@ -55,4 +55,14 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("Pet com o id: " + id + " nao encontrado em nossos registros");
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        if(petService.findById(id) != null) {
+            petService.delete(id);
+            return ResponseEntity.ok("Pet com o id: " + id + " deletado com sucesso!!!");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Pet com o id: " + id + " nao encontrado em nossos registros");
+    }
 }

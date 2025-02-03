@@ -48,4 +48,8 @@ public class PetService {
         }
         return null;
     }
+
+    public void delete(Long id) {
+        petRepository.deleteById(id);
+    }
 }
