@@ -57,4 +57,8 @@ public class OwnerService {
         return null;
     }
 
+    public void delete(Long id) {
+        ownerRepository.deleteById(id);
+    }
+
 }

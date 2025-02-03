@@ -39,6 +39,12 @@ public class OwnerController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody OwnerDTO ownerDTO){
        OwnerDTO owner = ownerService.update(id, ownerDTO);
-       return ResponseEntity.ok("Dono com o id " + id + " atualizado com sucesso!!!");
+       return ResponseEntity.ok("Dono com o id: " + id + " atualizado com sucesso!!!");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id){
+        ownerService.delete(id);
+        return ResponseEntity.ok("Dono com o id: " + id + " deletado com sucesso!!!");
     }
 }
