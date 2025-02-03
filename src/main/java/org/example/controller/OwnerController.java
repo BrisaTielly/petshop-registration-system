@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import org.example.dto.OwnerDTO;
-import org.example.model.OwnerModel;
 import org.example.services.OwnerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +18,24 @@ public class OwnerController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<OwnerDTO>> findAll() {
+    public ResponseEntity<?> findAll() {
        List<OwnerDTO> owners = ownerService.findAll();
+       if(owners.isEmpty()){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                   .body("Não há registros em nosso banco de dados no momento!");
+       }
        return ResponseEntity.ok(owners);
     }
 
     @GetMapping("/list/{id}")
-    public ResponseEntity<OwnerDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<?> findById(@PathVariable Long id) {
         OwnerDTO ownerDTO = ownerService.findById(id);
-        return ResponseEntity.ok(ownerDTO);
+        if(ownerDTO != null){
+            return ResponseEntity.ok(ownerDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Não há registros de um dono com id: " + id + " em nosso banco de dados");
+        }
     }
 
     @PostMapping("/save")
@@ -39,12 +47,20 @@ public class OwnerController {
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody OwnerDTO ownerDTO){
        OwnerDTO owner = ownerService.update(id, ownerDTO);
-       return ResponseEntity.ok("Dono com o id: " + id + " atualizado com sucesso!!!");
+       if(owner != null) {
+           return ResponseEntity.ok("Dono com o id: " + id + " atualizado com sucesso!!!");
+       }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Dono com o id: " + id + " nao encontrado em nossos registros");
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
-        ownerService.delete(id);
-        return ResponseEntity.ok("Dono com o id: " + id + " deletado com sucesso!!!");
+        if(ownerService.findById(id) != null) {
+            ownerService.delete(id);
+            return ResponseEntity.ok("Dono com o id: " + id + " deletado com sucesso!!!");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Dono com o id: " + id + " nao encontrado em nossos registros");
     }
 }

@@ -35,7 +35,7 @@ public class OwnerService {
     @Transactional(readOnly = true)
     public OwnerDTO findById(Long id){
         Optional<OwnerModel> owner = ownerRepository.findById(id);
-        if(owner.get() != null){
+        if(owner.isPresent()){
             owner.get().getPets().size(); //forçando a inicialização
         }
         return owner.map(ownerMapper::mapToDTO).orElse(null);
