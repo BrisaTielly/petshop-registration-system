@@ -1,13 +1,19 @@
 package org.example.services;
 
+import org.example.dto.OwnerDTO;
 import org.example.dto.PetDTO;
 import org.example.mapper.PetMapper;
+import org.example.model.OwnerModel;
 import org.example.model.PetModel;
 import org.example.repository.PetRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Service
 public class PetService {
     private final PetRepository petRepository;
     private final PetMapper petMapper;
@@ -22,5 +28,10 @@ public class PetService {
         return pets.stream()
                 .map(petMapper::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    public PetDTO findById(Long id){
+        Optional<PetModel> pet = petRepository.findById(id);
+        return pet.map(petMapper::mapToDTO).orElse(null);
     }
 }

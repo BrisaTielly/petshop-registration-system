@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/owners")
 public class OwnerController {
-    OwnerService ownerService;
+    private final OwnerService ownerService;
 
     public OwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
