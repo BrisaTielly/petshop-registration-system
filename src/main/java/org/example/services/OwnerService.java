@@ -46,4 +46,15 @@ public class OwnerService {
        return ownerMapper.mapToDTO(ownerModel);
     }
 
+    public OwnerDTO update(Long id, OwnerDTO ownerDTO) {
+        Optional<OwnerModel> ownerModel = ownerRepository.findById(id);
+        if(ownerModel.isPresent()){
+            OwnerModel owner = ownerMapper.mapToModel(ownerDTO);
+            owner.setId(id);
+            owner = ownerRepository.save(owner);
+            return ownerMapper.mapToDTO(owner);
+        }
+        return null;
+    }
+
 }

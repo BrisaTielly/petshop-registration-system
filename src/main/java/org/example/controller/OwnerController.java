@@ -35,4 +35,10 @@ public class OwnerController {
         OwnerDTO owner = ownerService.save(ownerDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(owner);
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> update(@PathVariable Long id, @RequestBody OwnerDTO ownerDTO){
+       OwnerDTO owner = ownerService.update(id, ownerDTO);
+       return ResponseEntity.ok("Dono com o id " + id + " atualizado com sucesso!!!");
+    }
 }
