@@ -40,4 +40,10 @@ public class OwnerService {
         }
         return owner.map(ownerMapper::mapToDTO).orElse(null);
     }
+
+    public OwnerDTO save(OwnerDTO owner){
+       OwnerModel ownerModel = ownerRepository.save(ownerMapper.mapToModel(owner));
+       return ownerMapper.mapToDTO(ownerModel);
+    }
+
 }
