@@ -1,17 +1,12 @@
+version: '3.8'
 services:
-  db:
-    image: mysql:9.1.0
-    container_name: mysql
-    restart: always
+  postgres:
+    image: postgres:latest
+    container_name: jawscontainer
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: anime_store #cria automaticamente esse banco
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      POSTGRES_DB: jaws
+      POSTGRES_USER: postres
+      POSTGRES_PASSWORD: postres
     ports:
-      - "3306:3306"
-    volumes:
-      - brisa_data:/var/lib/mysql
-
-volumes:
-  brisa_data:
+      - "5431:5432"
+    restart: always
